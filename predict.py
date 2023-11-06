@@ -105,5 +105,5 @@ class Predictor(BasePredictor):
             output = crop_to_exact_size(output, width, height)
 
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
-        output.save(save_path)
+        cv2.imwrite(save_path, output)
         return Path(save_path)
