@@ -103,6 +103,9 @@ class Predictor(BasePredictor):
                 output = Image.fromarray(output)
             # Resize the image to the original size before saving
             output = crop_to_exact_size(output, width, height)
+            save_path = os.path.join(tempfile.mkdtemp(), "output.png")
+            output.save(save_path)
+            return Path(save_path)
 
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
         cv2.imwrite(save_path, output)
