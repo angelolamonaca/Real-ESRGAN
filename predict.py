@@ -94,15 +94,15 @@ class Predictor(BasePredictor):
 
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
-        if not isinstance(output, Image.Image):
-            if output.dtype != np.uint8:
-                output = output.astype(np.uint8)
-            # Assuming the image was in BGR format, convert it to RGB.
-            if output.shape[-1] == 3:  # Check if the image has three channels
-                output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-            output = Image.fromarray(output)
-        # Resize the image to the original size before saving
-        output = crop_to_exact_size(output, width, height)
+            if not isinstance(output, Image.Image):
+                if output.dtype != np.uint8:
+                    output = output.astype(np.uint8)
+                # Assuming the image was in BGR format, convert it to RGB.
+                if output.shape[-1] == 3:  # Check if the image has three channels
+                    output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+                output = Image.fromarray(output)
+            # Resize the image to the original size before saving
+            output = crop_to_exact_size(output, width, height)
 
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
         output.save(save_path)
