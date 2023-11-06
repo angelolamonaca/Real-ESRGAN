@@ -5,6 +5,7 @@ import tempfile
 from typing import Optional
 
 import cv2
+from PIL import Image
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from cog import BasePredictor, Input, Path
 from gfpgan import GFPGANer
@@ -13,6 +14,24 @@ from realesrgan import RealESRGANer
 MODEL_NAME = "RealESRGAN_x4plus"
 ESRGAN_PATH = os.path.join("/root/.cache/realesrgan", MODEL_NAME + ".pth")
 GFPGAN_PATH = "/root/.cache/realesrgan/GFPGANv1.3.pth"
+
+
+def crop_to_exact_size(image, target_width, target_height):
+    # Calculate the margins to crop from the center of the image
+    margin_x = max((image.width - target_width) // 2, 0)
+    margin_y = max((image.height - target_height) // 2, 0)
+
+    # Define the crop area
+    crop_area = (
+        margin_x,
+        margin_y,
+        margin_x + target_width,
+        margin_y + target_height
+    )
+
+    # Crop the image to the calculated area
+    cropped_image = image.crop(crop_area)
+    return cropped_image
 
 
 class Predictor(BasePredictor):
@@ -74,8 +93,11 @@ class Predictor(BasePredictor):
 
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
-            output = cv2.resize(output, (width, height), interpolation=cv2.INTER_LINEAR)
+            if not isinstance(output, Image.Image):
+                output = Image.open(output)
+            # Resize the image to the original size before saving
+            output = crop_to_exact_size(output, width, height)
 
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
-        cv2.imwrite(save_path, output)
+        output.save(save_path)
         return Path(save_path)
