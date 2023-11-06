@@ -68,10 +68,10 @@ class Predictor(BasePredictor):
             scale: float = Input(
                 description="Factor to scale image by", ge=0, le=15, default=4
             ),
-            width: Optional[int] = Input(
+            width: int = Input(
                 description="Desired width of the output image", default=None
             ),
-            height: Optional[int] = Input(
+            height: int = Input(
                 description="Desired height of the output image", default=None
             ),
             face_enhance: bool = Input(
