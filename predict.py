@@ -5,6 +5,7 @@ import tempfile
 from typing import Optional
 
 import cv2
+import numpy as np
 from PIL import Image
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from cog import BasePredictor, Input, Path
@@ -94,7 +95,9 @@ class Predictor(BasePredictor):
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
             if not isinstance(output, Image.Image):
-                output = Image.open(output)
+                if output.dtype != np.uint8:
+                    output = output.astype(np.uint8)
+                output = Image.fromarray(output)
             # Resize the image to the original size before saving
             output = crop_to_exact_size(output, width, height)
 
