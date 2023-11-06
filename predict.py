@@ -91,6 +91,7 @@ class Predictor(BasePredictor):
             print("running without face enhancement")
             output, _ = self.upsampler.enhance(img, outscale=scale)
 
+        print(output)
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
             if not isinstance(output, Image.Image):
