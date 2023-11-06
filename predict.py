@@ -91,7 +91,6 @@ class Predictor(BasePredictor):
             print("running without face enhancement")
             output, _ = self.upsampler.enhance(img, outscale=scale)
 
-        print(output)
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
             if not isinstance(output, Image.Image):
@@ -100,5 +99,5 @@ class Predictor(BasePredictor):
             output = crop_to_exact_size(output, width, height)
 
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
-        output.save(save_path)
+        cv2.imwrite(save_path, output)
         return Path(save_path)
