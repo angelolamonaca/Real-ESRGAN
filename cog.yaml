@@ -15,6 +15,7 @@ build:
     - "facexlib"
     - "opencv-python"
     - "Pillow"
+    - "requests==2.31.0"
     - "tqdm"
 
   run:
