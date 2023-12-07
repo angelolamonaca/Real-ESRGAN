@@ -49,7 +49,7 @@ def upload_pil_image(pil_image, mime_type):
 
 def post_to_ai_service(job_id, image_url):
     # AI Service Endpoint
-    AI_SERVICE_ENDPOINT = 'https://ai-service-dev.neuramare.com/v1/replicate/image'
+    AI_SERVICE_ENDPOINT = 'https://ai-service.neuramare.com/v1/replicate/image'
 
     # Payload for the POST request
     payload = {
