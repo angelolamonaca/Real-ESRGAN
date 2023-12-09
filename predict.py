@@ -162,27 +162,30 @@ class Predictor(BasePredictor):
 
         # Resize the image to the specified width and height if they are provided
         if width is not None and height is not None:
+            print("width and height are not none")
             if not isinstance(output, Image.Image):
+                print("output is not instance of Image.Image")
                 if output.dtype != np.uint8:
+                    print("output.dtype is not np.uint8")
                     output = output.astype(np.uint8)
+
                 # Assuming the image was in BGR format, convert it to RGB.
+                print("shape")
+                print(output.shape)
                 if output.shape[-1] == 3:  # Check if the image has three channels
+                    print("image has 3 channels")
                     output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+                if output.shape[-1] == 4:  # Check if the image has three channels
+                    print("image has 4 channels")
+                    output = cv2.cvtColor(output, cv2.COLOR_BGRA2RGB)
                 output = Image.fromarray(output)
             # Resize the image to the original size before saving
             output = crop_to_exact_size(output, width, height)
             if job_id:
-                if not isinstance(output, Image.Image):
-                    if output.dtype != np.uint8:
-                        output = output.astype(np.uint8)
-                    # Assuming the image was in BGR format, convert it to RGB.
-                    if output.shape[-1] == 3:  # Check if the image has three channels
-                        output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-                    output = Image.fromarray(output)
                 print("Upload image")
                 uploaded_image_url = upload_pil_image(output, "image/png")
                 print("Send url to ai service for saving")
-                post_to_ai_service(job_id, uploaded_image_url)
+                post_to_ai_service(job_id, uploaded_image_url, callback_url)
                 print("Define the output path")
                 save_path = os.path.join(tempfile.mkdtemp(), "output.png")
                 print("Create fake image, since we did the upload")
@@ -195,11 +198,19 @@ class Predictor(BasePredictor):
                 return Path(save_path)
         if job_id:
             if not isinstance(output, Image.Image):
+                print("output is not instance of Image.Image")
                 if output.dtype != np.uint8:
+                    print("output.dtype is not np.uint8")
                     output = output.astype(np.uint8)
                 # Assuming the image was in BGR format, convert it to RGB.
+                print("shape")
+                print(output.shape)
                 if output.shape[-1] == 3:  # Check if the image has three channels
+                    print("image has 3 channels")
                     output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+                if output.shape[-1] == 4:  # Check if the image has three channels
+                    print("image has 4 channels")
+                    output = cv2.cvtColor(output, cv2.COLOR_BGRA2RGB)
                 output = Image.fromarray(output)
             print("Upload image")
             uploaded_image_url = upload_pil_image(output, "image/png")
