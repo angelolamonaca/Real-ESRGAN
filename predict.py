@@ -47,10 +47,7 @@ def upload_pil_image(pil_image, mime_type):
     return s3_download_pre_signed_url_response['imageUrl']
 
 
-def post_to_ai_service(job_id, image_url):
-    # AI Service Endpoint
-    AI_SERVICE_ENDPOINT = 'https://ai-service.neuramare.com/v1/replicate/image'
-
+def post_to_ai_service(job_id, image_url, callback_url):
     # Payload for the POST request
     payload = {
         'id': job_id,
@@ -58,7 +55,7 @@ def post_to_ai_service(job_id, image_url):
     }
 
     # Perform the POST request
-    response = requests.post(AI_SERVICE_ENDPOINT, json=payload)
+    response = requests.post(callback_url, json=payload)
 
     # Check if the response status is not 200
     if response.status_code != 200:
@@ -140,6 +137,9 @@ class Predictor(BasePredictor):
             height: int = Input(
                 description="Desired height of the output image", default=None
             ),
+            callback_url: str = Input(
+                description="callback url", default=None
+            ),
             job_id: str = Input(
                 description="job id", default=None
             ),
@@ -204,7 +204,7 @@ class Predictor(BasePredictor):
             print("Upload image")
             uploaded_image_url = upload_pil_image(output, "image/png")
             print("Send url to ai service for saving")
-            post_to_ai_service(job_id, uploaded_image_url)
+            post_to_ai_service(job_id, uploaded_image_url, callback_url)
             print("Define the output path")
             save_path = os.path.join(tempfile.mkdtemp(), "output.png")
             print("Create fake image, since we did the upload")
